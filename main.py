@@ -1,5 +1,7 @@
 import requests
 import json
+import datetime
+import pprint
 
 accuweatherAPIkey = 'Zop2rFzP4JFkQjfKBqQg42oqIEiA5j7j'
 
@@ -57,6 +59,27 @@ def get_weather_now(local_code, local_name):
         return None
 
 
+def get_next_days_conditions():
+    next_days_conditions_api_url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" \
+                                   "44157?apikey=" + accuweatherAPIkey + "&language=pt-BR&metric=true"
+    r = requests.get(next_days_conditions_api_url)
+    if r.status_code == 200:
+        try:
+            daily_api_response = json.loads(r.text)
+            next_5days_weather = []
+            for day in daily_api_response['DailyForecasts']:
+                daily_weather = {'max': day["Temperature"]["Maximum"]["Value"],
+                                 'min': day["Temperature"]["Minimum"]["Value"],
+                                 'weather': day['Day']['IconPhrase'],
+                                 'day': day['EpochDate']}
+                next_5days_weather.append(daily_weather)
+            return next_5days_weather
+        except:
+            return None
+    else:
+        return f'Erro ao obter condição dos próximos 5 dias'
+
+
 # Beggins
 
 coordinates = get_coordinates()
@@ -69,5 +92,8 @@ try:
 except None:
     print('Não foi possível obter o clima atual.')
 
+print("\n" * 3)
+print(f'Previsão para os próximos 5 dias:\n')
 
-
+for day in get_next_days_conditions():
+    print(f'Dia: {day["day"]} Máxima: {day["max"]} Mínima: {day["min"]}, Previsão: {day["weather"]}')
