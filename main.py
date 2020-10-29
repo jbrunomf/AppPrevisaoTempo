@@ -9,9 +9,6 @@ def get_coordinates():
     if r.status_code == 200:
         location = json.loads(r.text)
         coordinates = {'lat': location['geoplugin_latitude'], 'long': location['geoplugin_longitude']}
-        # longitude = location['geoplugin_longitude']
-        # latitude = location['geoplugin_latitude']
-        # print(f'Latitude: {latitude} Longitude: {longitude}')
         return coordinates
     else:
         return f'Erro ao obter coordenadas.'
@@ -43,7 +40,6 @@ def get_weather_now(local_code, local_name):
         weather_info = {'weatherText': currentConditionsResponse[0]['WeatherText'],
                         'temperature': currentConditionsResponse[0]['Temperature']['Metric']['Value'],
                         'localName': local_name}
-        # print(f'A temperatura atual é: {weather_info["temperature"]} ºC, Condição climática: {weather_info["weatherText"]}')
         return weather_info
     else:
         print(r.status_code)
