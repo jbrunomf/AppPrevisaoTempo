@@ -1,10 +1,11 @@
 import requests
 import json
-import datetime
+from datetime import date
 import pprint
 
 accuweatherAPIkey = 'Zop2rFzP4JFkQjfKBqQg42oqIEiA5j7j'
 
+dias_semana = ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado']
 
 def get_coordinates():
     r = requests.get('http://www.geoplugin.net/json.gp')
@@ -92,8 +93,8 @@ try:
 except None:
     print('Não foi possível obter o clima atual.')
 
-print("\n" * 3)
+print("\n")
 print(f'Previsão para os próximos 5 dias:\n')
 
 for day in get_next_days_conditions():
-    print(f'Dia: {day["day"]} Máxima: {day["max"]} Mínima: {day["min"]}, Previsão: {day["weather"]}')
+    print(f'Dia {date.fromtimestamp(day["day"]).strftime("%d/%m/%Y")} - {dias_semana[int(date.fromtimestamp(day["day"]).strftime("%w"))]} Máxima: {day["max"]} Mínima: {day["min"]}, Previsão: {day["weather"]}')
